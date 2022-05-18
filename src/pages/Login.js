@@ -1,16 +1,16 @@
 import React from 'react';
-import { createUser } from '../services/userAPI';
-import Loading from './Loading';
 
 class Login extends React.Component {
-  constructor() {
-    super();
-    state = {
+  constructor(props) {
+    super(props);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.validateLogin = this.validateLogin.bind(this);
+
+    this.state = {
       name: '',
       disabledButton: true,
-      loadingMessage: true,
+      // loading: false,
     };
-    this.props = this.onInputChange.bind(this);
   }
 
   // Salva as alterações no estado
@@ -22,14 +22,15 @@ class Login extends React.Component {
   validateLogin() {
     const { name } = this.state;
     const validLength = 3;
-		if (name.length >= validLength) {
-			this.setState( disabledButton:true )
-		} else {
-			this.setState( disabledButton:false )
-		}
+    if (name.length >= validLength) {
+      this.setState({ disabledButton: false });
+    } else {
+      this.setState({ disabledButton: true });
+    }
   }
 
   render() {
+    const { disabledButton } = this.state;
     return (
       <form>
         <input
