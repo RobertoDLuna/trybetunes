@@ -32,21 +32,25 @@ class Login extends React.Component {
   render() {
     const { disabledButton } = this.state;
     return (
-      <form>
-        <input
-          data-testid="login-name-input"
-          type="text"
-          name="name"
-          onChange={ this.onInputChange }
-        />
-        <button
-          data-testid="login-submit-button"
-          type="button"
-          disabled={ disabledButton }
-        >
-          Entrar
-        </button>
-      </form>
+      <div data-testid="page-login">
+        Login
+
+        <form>
+          <input
+            data-testid="login-name-input"
+            type="text"
+            name="name"
+            onChange={ this.onInputChange }
+          />
+          <button
+            data-testid="login-submit-button"
+            type="button"
+            disabled={ disabledButton }
+          >
+            Entrar
+          </button>
+        </form>
+      </div>
     );
   }
 }
