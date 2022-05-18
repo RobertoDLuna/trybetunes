@@ -9,7 +9,7 @@ class Login extends React.Component {
     this.state = {
       name: '',
       disabledButton: true,
-      // loading: false,
+      // loadingMessage: false,
     };
   }
 
