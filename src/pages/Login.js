@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { createUser } from '../services/userAPI';
 
@@ -6,6 +7,7 @@ class Login extends React.Component {
     super(props);
     this.onInputChange = this.onInputChange.bind(this);
     this.validateLogin = this.validateLogin.bind(this);
+    this.loginUser = this.loginUser.bind(this);
 
     this.state = {
       name: '',
@@ -30,10 +32,12 @@ class Login extends React.Component {
     }
   }
 
-  saveLoginName = userLogin() => {
+  async loginUser() {
     const { name } = this.state;
+    const { history } = this.props;
     this.setState(() => ({ loadingMessage: true }));
-    createUser({ name });
+    await createUser({ name });
+    history.push('/Search');
   }
 
   render() {
@@ -41,7 +45,6 @@ class Login extends React.Component {
     return (
       <div data-testid="page-login">
         Login
-
         <form>
           <input
             data-testid="login-name-input"
@@ -61,5 +64,9 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.objectOf.isRequired,
+};
 
 export default Login;
