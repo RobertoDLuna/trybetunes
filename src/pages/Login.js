@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { createUser } from '../services/userAPI';
+import Loading from './Loading';
 
 class Login extends React.Component {
   constructor(props) {
@@ -41,7 +42,10 @@ class Login extends React.Component {
   }
 
   render() {
-    const { disabledButton } = this.state;
+    const { disabledButton, loadingMessage } = this.state;
+    if (loadingMessage === true) {
+      return <Loading />;
+    }
     return (
       <div data-testid="page-login">
         Login
@@ -53,6 +57,7 @@ class Login extends React.Component {
             onChange={ this.onInputChange }
           />
           <button
+            onClick={ this.loginUser }
             data-testid="login-submit-button"
             type="button"
             disabled={ disabledButton }
