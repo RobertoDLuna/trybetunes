@@ -1,4 +1,5 @@
 import React from 'react';
+import { createUser } from '../services/userAPI';
 
 class Login extends React.Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class Login extends React.Component {
     this.state = {
       name: '',
       disabledButton: true,
-      // loadingMessage: false,
+      loadingMessage: false,
     };
   }
 
@@ -27,6 +28,12 @@ class Login extends React.Component {
     } else {
       this.setState({ disabledButton: true });
     }
+  }
+
+  saveLoginName = userLogin() => {
+    const { name } = this.state;
+    this.setState(() => ({ loadingMessage: true }));
+    createUser({ name });
   }
 
   render() {
