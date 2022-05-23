@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { createUser } from '../services/userAPI';
 import Loading from './Loading';
 
@@ -35,10 +35,10 @@ class Login extends React.Component {
 
   async loginUser() {
     const { name } = this.state;
-    // const { history } = this.props;
+    const { history } = this.props;
     this.setState(() => ({ loadingMessage: true }));
     await createUser({ name });
-    <Redirect to="/search" />;
+    history.push('/search');
   }
 
   render() {
@@ -69,5 +69,9 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.objectOf.isRequired,
+};
 
 export default Login;
