@@ -35,10 +35,10 @@ class Login extends React.Component {
 
   async loginUser() {
     const { name } = this.state;
-    const { history } = this.props;
+    // const { history } = this.props;
     this.setState(() => ({ loadingMessage: true }));
     await createUser({ name });
-    history.push('/Search');
+    history.push('/search');
   }
 
   render() {
