@@ -1,11 +1,31 @@
 import React from 'react';
+import Loading from '../pages/Loading';
 import { getUser } from '../services/userAPI';
 
 class Header extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      user: {},
+      loadingMessage: false,
+    };
+  }
+
+  async componentDidMount() {
+    this.setState({ loadingMessage: true });
+    // Guarda o objeto do usuário
+    const objectUser = await getUser();
+    // salva o objeto do usuário em user
+    this.setState({ loadingMessage: false, user: objectUser });
+  }
+
   render() {
+    const { user, loadingMessage } = this.state;
     return (
       <header data-testid="header-component">
-        <h1>Cabeçalho</h1>
+        { loadingMessage
+          ? <Loading />
+          : <span data-testid="header-user-name">{user.name}</span> }
       </header>
     );
   }
