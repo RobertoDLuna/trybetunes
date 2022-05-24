@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
-import Loading from './Loading';
 
 class Login extends React.Component {
   constructor(props) {
@@ -42,29 +42,31 @@ class Login extends React.Component {
   }
 
   render() {
-    const { disabledButton, loadingMessage } = this.state;
-    if (loadingMessage === true) {
-      return <Loading />;
+    const { disabledButton, loadingMessage, login } = this.state;
+    if (login) {
+      return <Redirect to="/search" />;
     }
+    const loadingElement = 'Carregando...';
     return (
       <div data-testid="page-login">
-        Login
-        <form>
-          <input
-            data-testid="login-name-input"
-            type="text"
-            name="name"
-            onChange={ this.onInputChange }
-          />
-          <button
-            onClick={ this.loginUser }
-            data-testid="login-submit-button"
-            type="button"
-            disabled={ disabledButton }
-          >
-            Entrar
-          </button>
-        </form>
+        {loadingMessage ? loadingElement : (
+          <form>
+            <input
+              onChange={ this.onInputChange }
+              type="text"
+              name="name"
+              data-testid="login-name-input"
+            />
+            <button
+              onClick={ this.userLogin }
+              type="button"
+              disabled={ disabledButton }
+              data-testid="login-submit-button"
+            >
+              Entrar
+            </button>
+          </form>
+        )}
       </div>
     );
   }
