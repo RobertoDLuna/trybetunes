@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
 
 class Login extends React.Component {
@@ -42,10 +41,7 @@ class Login extends React.Component {
   }
 
   render() {
-    const { disabledButton, loadingMessage, login } = this.state;
-    if (login) {
-      return <Redirect to="/search" />;
-    }
+    const { disabledButton, loadingMessage } = this.state;
     const loadingElement = 'Carregando...';
     return (
       <div data-testid="page-login">
