@@ -1,37 +1,37 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import Loading from '../pages/Loading';
 import { getUser } from '../services/userAPI';
 
 class Header extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      user: {},
-      loadingMessage: false,
-    };
+  constructor(props) {
+    super(props);
+    this.loadHeader = this.loadHeader.bind(this);
   }
 
-  async componentDidMount() {
-    this.setState({ loadingMessage: true });
-    // Guarda o objeto do usuário
-    const objectUser = await getUser();
-    // salva o objeto do usuário em user
-    this.setState({ loadingMessage: false, user: objectUser });
+  state = {
+    name: '',
+    loading: true,
+  };
+
+  componentDidMount() {
+    this.loadHeader();
+  }
+
+  async loadHeader() {
+    const user = await getUser();
+    this.setState({ name: user.name, loading: false });
   }
 
   render() {
-    const { user, loadingMessage } = this.state;
+    const { name, loading } = this.state;
+    const loadingElement = <h1>Carregando...</h1>;
     return (
       <header data-testid="header-component">
-        { loadingMessage
-          ? <Loading />
-          : <span data-testid="header-user-name">{user.name}</span> }
-        <nav>
-          <Link data-testid="link-to-search" to="/search">Search</Link>
-          <Link data-testid="link-to-favorites" to="/favorites">Favorites</Link>
-          <Link data-testid="link-to-profile" to="/profile">Profile</Link>
-        </nav>
+        {loading ? loadingElement
+          : (
+            <p data-testid="header-user-name">
+              {name}
+            </p>
+          )}
       </header>
     );
   }

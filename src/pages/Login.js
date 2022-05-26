@@ -5,64 +5,61 @@ import { createUser } from '../services/userAPI';
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.validateLogin = this.validateLogin.bind(this);
-    this.loginUser = this.loginUser.bind(this);
-
-    this.state = {
-      name: '',
-      disabledButton: true,
-      loadingMessage: false,
-    };
+    this.login = this.login.bind(this);
   }
 
-  // Salva as alterações no estado
-  onInputChange({ target }) {
-    this.setState(() => ({ [target.name]: target.value }), this.validateLogin);
-  }
+  state = {
+    buttonDisabled: true,
+    name: '',
+    loading: false,
+    loaded: false,
+  };
 
-  // Verifica se o login é válido
-  validateLogin() {
+  validateButton = () => {
     const { name } = this.state;
-    const validLength = 3;
-    if (name.length >= validLength) {
-      this.setState({ disabledButton: false });
-    } else {
-      this.setState({ disabledButton: true });
-    }
+    this.setState({ buttonDisabled: name.length < '3' });
+  };
+
+  onInputChange = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value }, this.validateButton);
   }
 
-  async loginUser() {
+  async login() {
     const { name } = this.state;
-    this.setState(() => ({ loadingMessage: true }));
+    this.setState({ loading: true });
     await createUser({ name });
+    this.setState({ loaded: true });
   }
 
   render() {
-    const { disabledButton, loadingMessage, login } = this.state;
-    if (login) {
-      return <Redirect to="/search" />;
-    }
-    const loadingElement = 'Carregando...';
+    const { buttonDisabled, loading, loaded } = this.state;
+    const loadingElement = <h1>Carregando...</h1>;
     return (
       <div data-testid="page-login">
-        {loadingMessage ? loadingElement : (
-          <form>
-            <input
-              onChange={ this.onInputChange }
-              type="text"
-              name="name"
-              data-testid="login-name-input"
-            />
-            <button
-              onClick={ this.userLogin }
-              type="button"
-              disabled={ disabledButton }
-              data-testid="login-submit-button"
-            >
-              Entrar
-            </button>
-          </form>
+        {loaded && <Redirect to="/search" />}
+        {loading ? (
+          loadingElement
+        ) : (
+          <section>
+            <form>
+              <input
+                data-testid="login-name-input"
+                type="text"
+                placeholder="Digite seu nome"
+                name="name"
+                onChange={ this.onInputChange }
+              />
+              <button
+                disabled={ buttonDisabled }
+                data-testid="login-submit-button"
+                type="button"
+                onClick={ this.login }
+              >
+                Entrar
+              </button>
+            </form>
+          </section>
         )}
       </div>
     );
