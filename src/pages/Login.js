@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import { createUser } from '../services/userAPI';
 
 class Login extends React.Component {
@@ -34,14 +34,15 @@ class Login extends React.Component {
 
   async loginUser() {
     const { name } = this.state;
-    const { history } = this.props;
     this.setState(() => ({ loadingMessage: true }));
     await createUser({ name });
-    history.push('/search');
   }
 
   render() {
-    const { disabledButton, loadingMessage } = this.state;
+    const { disabledButton, loadingMessage, login } = this.state;
+    if (login) {
+      return <Redirect to="/search" />;
+    }
     const loadingElement = 'Carregando...';
     return (
       <div data-testid="page-login">
@@ -67,9 +68,5 @@ class Login extends React.Component {
     );
   }
 }
-
-Login.propTypes = {
-  history: PropTypes.objectOf.isRequired,
-};
 
 export default Login;
