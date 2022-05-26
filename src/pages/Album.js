@@ -1,53 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import MusicCard from '../components/MusicCard';
 import getMusics from '../services/musicsAPI';
+import MusicCard from '../components/MusicCard';
 
 class Album extends React.Component {
-  constructor(props) {
-    super(props);
-    const { match } = this.props;
-    const { id } = match.params;
-    this.state = {
-      id,
-      musics: [],
-      artistFound: '',
-      album: '',
-    };
+  state = {
+    albumImage: '',
+    artistName: '',
+    albumName: '',
+    tracks: [],
   }
 
   async componentDidMount() {
-    const { id } = this.state;
-    const musicsFound = await getMusics(id);
+    const { match: { params } } = this.props;
+    const album = await getMusics(params.id);
+    console.log(album);
     this.setState({
-      musics: musicsFound,
-      artistFound: musicsFound[0].artistName,
-      album: musicsFound[0].collectionName,
+      albumImage: album[0].artworkUrl100,
+      artistName: album[0].artistName,
+      albumName: album[0].collectionName,
+      tracks: album.slice(1),
     });
   }
 
   render() {
-    const { artistFound, album, musics } = this.state;
+    const { albumImage, artistName, albumName, tracks } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
-        <h3 data-testid="artist-name">{artistFound}</h3>
-        <span data-testid="album-name">{album}</span>
-        {musics.map((music, index) => {
-          let result;
-          if (index !== 0) {
-            result = <MusicCard music={ music } />;
-          }
-          return result;
-        })}
+        <div className="album-container">
+          <div className="album">
+            <img src={ albumImage } alt={ albumName } />
+            <h2 data-testid="album-name">{albumName}</h2>
+            <h3 data-testid="artist-name">{artistName}</h3>
+          </div>
+          <div className="tracks">
+            {tracks.map((track) => (<MusicCard
+              key={ track.trackName }
+              trackName={ track.trackName }
+              previewUrl={ track.previewUrl }
+              trackId={ track.trackId }
+            />))}
+          </div>
+        </div>
       </div>
     );
   }
 }
-
 Album.propTypes = {
-  match: PropTypes.objectOf.isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }).isRequired,
 };
-
 export default Album;
